@@ -15,10 +15,117 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Add your component styles here */
+  /* KYC Form Components */
+  .form-input {
+    @apply w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white
+      placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+      outline-none transition-all duration-200;
+  }
+
+  .form-input:hover {
+    @apply bg-white/15 border-white/30;
+  }
+
+  .form-input:focus {
+    @apply bg-white/20;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-300 mb-2;
+  }
+
+  .form-select {
+    @apply w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white
+      focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+      transition-all duration-200 hover:bg-gray-700/70 appearance-none;
+  }
+
+  .kyc-submit-button {
+    @apply w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl 
+      font-medium transition-all duration-300 transform hover:scale-[1.02] 
+      focus:ring-2 focus:ring-blue-500 focus:outline-none
+      disabled:opacity-50 disabled:cursor-not-allowed
+      hover:from-blue-700 hover:to-purple-700;
+  }
+
+  .step-indicator {
+    @apply w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300;
+  }
+
+  .step-indicator-active {
+    @apply bg-blue-600 text-white;
+  }
+
+  .step-indicator-inactive {
+    @apply bg-gray-700 text-gray-400;
+  }
+
+  .step-line {
+    @apply absolute top-5 left-1/2 w-full h-0.5 transition-all duration-300;
+  }
 }
 
-/* Animation classes */
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 1s linear infinite;
+}
+
+/* Transition Classes */
 .fade-enter {
   opacity: 0;
 }
@@ -35,4 +142,88 @@
 .fade-exit-active {
   opacity: 0;
   transition: opacity 200ms ease-in;
+}
+
+/* Background Effects */
+.bg-gradient-blur {
+  @apply bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900;
+  backdrop-filter: blur(20px);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  @apply w-5 h-5 border-2 border-white border-t-transparent rounded-full;
+  animation: spin 1s linear infinite;
+}
+
+/* Form Group Spacing */
+.form-group {
+  @apply space-y-4 mb-6;
+}
+
+/* Step Progress Animation */
+.step-progress {
+  @apply absolute top-5 left-0 h-0.5 bg-blue-600 transition-all duration-500;
+  width: 0%;
+}
+
+.step-progress-active {
+  width: 100%;
+}
+
+/* Hover Effects */
+.hover-scale {
+  @apply transition-transform duration-200 hover:scale-105;
+}
+
+/* Focus States */
+.focus-ring {
+  @apply focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900;
+}
+
+/* Enhanced Form Styles */
+.form-group {
+  @apply relative;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-300 mb-2;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white
+    placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+    outline-none transition-all duration-200;
+}
+
+.form-input:hover {
+  @apply bg-white/15 border-white/30;
+}
+
+.form-input:focus {
+  @apply bg-white/20;
+}
+
+/* Glassmorphism Effects */
+.glass-card {
+  @apply bg-white/10 backdrop-blur-xl border border-white/20;
+}
+
+.glass-input {
+  @apply bg-white/10 backdrop-blur-md;
+}
+
+/* Enhanced Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
 }

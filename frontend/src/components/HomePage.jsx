@@ -218,12 +218,145 @@ export function HomePage() {
     .animation-delay-4000 {
       animation-delay: 4s;
     }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    .step-animation {
+      animation: slideIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    .step-icon-pulse {
+      animation: pulse 2s infinite;
+    }
+
+    .hover-scale {
+      transition: all 0.3s ease;
+    }
+
+    .hover-scale:hover {
+      transform: scale(1.05);
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 1rem;
+    }
+
+    .connecting-line {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #3B82F6 50%, transparent 50%);
+      background-size: 200% 100%;
+      animation: line-flow 2s linear infinite;
+    }
+
+    @keyframes line-flow {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
   `;
 
   // Add this style tag to your document head or CSS file
   const styleSheet = document.createElement("style");
   styleSheet.innerText = styles;
   document.head.appendChild(styleSheet);
+
+  const steps = [
+    {
+      number: "1",
+      title: "Sign Up",
+      description: "Create your account in minutes",
+      icon: "👤",
+      delay: 0
+    },
+    {
+      number: "2",
+      title: "KYC Verification",
+      description: "Quick and easy verification process",
+      icon: "✓",
+      delay: 200
+    },
+    {
+      number: "3",
+      title: "Add Funds",
+      description: "Load your wallet with your preferred currency",
+      icon: "💰",
+      delay: 400
+    },
+    {
+      number: "4",
+      title: "Start Converting",
+      description: "Exchange currencies at great rates",
+      icon: "💱",
+      delay: 600
+    }
+  ];
+
+  // Updated How It Works section
+  const howItWorksSection = (
+    <div className="py-20 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-bold text-white text-center mb-16 
+          bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent
+          transform hover:scale-105 transition-transform duration-300">
+          How It Works
+        </h2>
+
+        <div className="grid md:grid-cols-4 gap-8 relative">
+          {/* Connecting Lines for Desktop */}
+          <div className="hidden md:block absolute top-6 left-[25%] right-[25%] h-0.5 bg-blue-600/30">
+            <div className="connecting-line"></div>
+          </div>
+
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className="relative step-animation hover-scale p-6"
+              style={{ animationDelay: `${step.delay}ms` }}
+            >
+              <div className="text-center relative z-10">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6
+                  step-icon-pulse transform hover:rotate-12 transition-transform duration-300">
+                  <span className="text-2xl text-white">{step.icon}</span>
+                  <span className="absolute -bottom-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center
+                    text-white text-sm font-bold">{step.number}</span>
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3 
+                  hover:text-blue-400 transition-colors duration-300">
+                  {step.title}
+                </h3>
+                <p className="text-gray-300 hover:text-gray-100 transition-colors duration-300">
+                  {step.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
@@ -315,51 +448,7 @@ export function HomePage() {
       </div>
 
       {/* How It Works */}
-      <div className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            How It Works
-          </h2>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold">1</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Sign Up</h3>
-              <p className="text-gray-300">Create your account in minutes</p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold">2</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">KYC Verification</h3>
-              <p className="text-gray-300">Quick and easy verification process</p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold">3</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Add Funds</h3>
-              <p className="text-gray-300">Load your wallet with your preferred currency</p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold">4</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Start Trading</h3>
-              <p className="text-gray-300">Exchange currencies at great rates</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {howItWorksSection}
     </div>
   );
 } 
