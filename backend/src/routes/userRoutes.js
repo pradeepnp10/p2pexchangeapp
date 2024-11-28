@@ -4,10 +4,12 @@ import { getProfile, updateProfile } from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.use(protect);
+// Comment out the global protect middleware
+// router.use(protect);
 
+// Add protection to specific routes if needed
 router.route('/profile')
-  .get(getProfile)
+  .get(getProfile)  // Remove protect if you want to test without authentication
   .put(updateProfile);
 
 export default router;
