@@ -1,72 +1,61 @@
 import express from 'express';
 import Stripe from 'stripe';
-import { auth } from '../middleware/auth';
+import { pool } from '../database/db';
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Route for creating payment intent for wallet funding
-router.post('/fund', auth, async (req, res) => {
-  try {
-    const { amount, currency } = req.body;
-    
-    console.log('Received request:', { amount, currency }); // Debug log
+// Route for getting wallet balances - no auth required temporarily
+router.get('/balances', async (req, res) => {
+    try {
+        // Get all wallets for testing
+        const [wallets] = await pool.execute(
+            `SELECT currency, balance FROM wallets`
+        );
 
-    if (!amount || !currency) {
-      return res.status(400).json({
-        error: 'Missing required fields',
-        required: ['amount', 'currency']
-      });
+        res.json(wallets);
+    } catch (error) {
+        console.error('Error fetching wallet balances:', error);
+        res.status(500).json({ error: 'Failed to fetch wallet balances' });
     }
-
-    // Create payment intent with Stripe
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount), // Stripe expects integers
-      currency: currency.toLowerCase(),
-      metadata: {
-        userId: req.user.id,
-        type: 'wallet_funding'
-      }
-    });
-
-    console.log('Payment intent created:', paymentIntent.id); // Debug log
-
-    res.json({
-      clientSecret: paymentIntent.client_secret
-    });
-
-  } catch (error) {
-    console.error('Wallet funding error:', error);
-    res.status(500).json({ 
-      error: 'Failed to process payment intent',
-      details: error.message 
-    });
-  }
 });
 
-// Simple success webhook handler
-router.post('/webhook', express.raw({type: 'application/json'}), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
+// Route for creating payment intent - no auth required temporarily
+router.post('/fund', async (req, res) => {
+    try {
+        const { amount, currency } = req.body;
+        
+        console.log('Wallet funding request:', { amount, currency });
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+        if (!amount || !currency) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                required: ['amount', 'currency']
+            });
+        }
 
-  // Handle successful payments
-  if (event.type === 'payment_intent.succeeded') {
-    const paymentIntent = event.data.object;
-    console.log('Payment succeeded:', paymentIntent.id);
-  }
+        // Create payment intent with Stripe
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(amount),
+            currency: currency.toLowerCase(),
+            metadata: {
+                type: 'wallet_funding'
+            }
+        });
 
-  res.json({ received: true });
+        console.log('Payment intent created:', paymentIntent.id);
+
+        res.json({
+            clientSecret: paymentIntent.client_secret
+        });
+
+    } catch (error) {
+        console.error('Wallet funding error:', error);
+        res.status(500).json({ 
+            error: 'Failed to process payment intent',
+            details: error.message 
+        });
+    }
 });
 
 export default router;

@@ -59,6 +59,47 @@ export const WalletComponent = () => {
     }
   };
 
+  // Add function to fetch wallet balances
+  const fetchWalletBalances = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/api/wallet/balances');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch wallet balances');
+        }
+
+        const data = await response.json();
+        console.log('Fetched wallet balances:', data);
+
+        // Initialize all currencies with 0 balance
+        const newBalances = {
+            USD: 0,
+            EUR: 0,
+            SGD: 0,
+            AUD: 0,
+            JPY: 0
+        };
+
+        // Update balances from the response
+        data.forEach(wallet => {
+            if (wallet.currency in newBalances) {
+                newBalances[wallet.currency] = parseFloat(wallet.balance);
+            }
+        });
+
+        console.log('Setting balances to:', newBalances);
+        setBalances(newBalances);
+    } catch (error) {
+        console.error('Error fetching balances:', error);
+        toast.error('Failed to fetch wallet balances');
+    }
+  };
+
+  // Call fetchWalletBalances on component mount and after successful payment
+  useEffect(() => {
+    fetchWalletBalances();
+  }, []);
+
   // Handle adding money to wallet
   const handleAddMoney = async () => {
     if (addAmount && !isNaN(addAmount) && Number(addAmount) > 0) {
@@ -95,28 +136,52 @@ export const WalletComponent = () => {
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setBalances(prev => ({
-      ...prev,
-      [selectedCurrency]: prev[selectedCurrency] + Number(addAmount)
-    }));
+  const verifyWalletUpdate = async (currency) => {
+    try {
+        const response = await fetch(`http://localhost:3000/api/wallet/verify/${currency}`);
+        const data = await response.json();
+        console.log('Wallet verification:', data);
+        
+        if (data.exists) {
+            toast.success(`Wallet balance: ${formatCurrency(data.wallet.balance, currency)}`);
+        } else {
+            toast.warning('Wallet not found');
+        }
+    } catch (error) {
+        console.error('Verification error:', error);
+    }
+  };
 
-    const newTransaction = {
-      id: Date.now(),
-      type: 'deposit',
-      amount: Number(addAmount),
-      currency: selectedCurrency,
-      date: new Date().toLocaleDateString(),
-      recipient: 'Wallet'
-    };
+  const handlePaymentSuccess = async () => {
+    try {
+        await fetchWalletBalances();
+        // Verify the update
+        await verifyWalletUpdate(selectedCurrency);
 
-    setRecentTransactions(prev => [newTransaction, ...prev]);
-    setNotification(`Successfully added ${formatCurrency(Number(addAmount), selectedCurrency)}`);
-    setAddAmount('');
-    setShowAddMoney(false);
-    setShowStripeForm(false);
-    setClientSecret('');
-    setTimeout(() => setNotification(''), 3000);
+        const newTransaction = {
+            id: Date.now(),
+            type: 'deposit',
+            amount: Number(addAmount),
+            currency: selectedCurrency,
+            date: new Date().toLocaleDateString(),
+            recipient: 'Wallet'
+        };
+
+        setRecentTransactions(prev => [newTransaction, ...prev]);
+        setNotification(`Successfully added ${formatCurrency(Number(addAmount), selectedCurrency)}`);
+        setAddAmount('');
+        setShowAddMoney(false);
+        setShowStripeForm(false);
+        setClientSecret('');
+        
+        // Show success message
+        toast.success(`Successfully added ${formatCurrency(Number(addAmount), selectedCurrency)}`);
+        
+        setTimeout(() => setNotification(''), 3000);
+    } catch (error) {
+        console.error('Error:', error);
+        toast.error('Error verifying wallet update');
+    }
   };
 
   // Handle sending money

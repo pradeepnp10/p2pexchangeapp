@@ -102,16 +102,9 @@ export function Exchange() {
       setLoading(true);
       setError(null);
 
-      // Get userId from localStorage
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
-
       console.log('Creating payment intent:', {
         amount: exchangeDetails.amount,
-        currency: exchangeDetails.fromCurrency,
-        userId
+        currency: exchangeDetails.fromCurrency
       });
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/create-payment-intent`, {
@@ -121,8 +114,7 @@ export function Exchange() {
         },
         body: JSON.stringify({
           amount: parseFloat(exchangeDetails.amount),
-          currency: exchangeDetails.fromCurrency,
-          userId: parseInt(userId),
+          currency: exchangeDetails.fromCurrency.toLowerCase(),
           metadata: {
             exchangeRate: exchangeRate,
             toCurrency: exchangeDetails.toCurrency,
@@ -141,21 +133,21 @@ export function Exchange() {
       setShowPayment(true);
     } catch (err) {
       console.error('Payment setup error:', err);
-      setError(err.message);
+      setError(err.message || 'Failed to setup payment');
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePaymentSuccess = (result) => {
-    console.log('Payment successful:', result);
+  const handlePaymentSuccess = (paymentIntent) => {
+    console.log('Payment successful:', paymentIntent);
     setTransactionStatus({
       success: true,
-      message: `Payment of ${exchangeDetails.amount} ${exchangeDetails.fromCurrency} was successful!`,
-      transactionId: result.id
+      message: `Exchange of ${exchangeDetails.amount} ${exchangeDetails.fromCurrency} to ${convertedAmount} ${exchangeDetails.toCurrency} was successful!`,
+      transactionId: paymentIntent.id
     });
     
-    // Optional: Reset form after successful payment
+    // Reset form after successful payment
     setTimeout(() => {
       setExchangeDetails({
         amount: '',
@@ -169,7 +161,7 @@ export function Exchange() {
         message: '',
         transactionId: null
       });
-    }, 5000); // Reset after 5 seconds
+    }, 5000);
   };
 
   // Payment form props

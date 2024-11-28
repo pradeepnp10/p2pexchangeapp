@@ -27,9 +27,6 @@ export function WalletPaymentForm({ amount, currency, clientSecret, onSuccess })
       const { error: submitError, paymentIntent } = await stripe.confirmPayment({
         elements,
         redirect: 'if_required',
-        confirmParams: {
-          return_url: `${window.location.origin}/dashboard/payment-success`,
-        },
       });
 
       if (submitError) {
@@ -37,6 +34,22 @@ export function WalletPaymentForm({ amount, currency, clientSecret, onSuccess })
       }
 
       if (paymentIntent.status === 'succeeded') {
+        // Send the original amount (not divided by 100)
+        const response = await fetch('http://localhost:3000/api/wallet/update-balance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: amount / 100, // This is the original amount entered by user
+            currency: currency
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update wallet balance');
+        }
+
         toast.success('Payment successful!');
         onSuccess && onSuccess();
       }

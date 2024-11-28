@@ -5,56 +5,77 @@ export function PaymentForm({ amount, currency, onSuccess }) {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // Don't render the form until Stripe.js has loaded
-  if (!stripe || !elements) {
-    return null;
-  }
+  const [processing, setProcessing] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setProcessing(true);
     setError(null);
 
     try {
-      const { error: submitError } = await stripe.confirmPayment({
+      const { error: submitError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/dashboard/payment-success`,
+          return_url: `${window.location.origin}/payment-success`,
         },
+        redirect: 'if_required',
       });
 
       if (submitError) {
-        throw new Error(submitError.message);
+        throw submitError;
       }
 
-      onSuccess();
+      if (paymentIntent.status === 'succeeded') {
+        // Update exchange transaction
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/confirm-exchange`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentIntentId: paymentIntent.id,
+            amount: amount,
+            currency: currency
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to confirm exchange');
+        }
+
+        onSuccess && onSuccess(paymentIntent);
+      }
     } catch (err) {
+      console.error('Payment error:', err);
       setError(err.message);
     } finally {
-      setLoading(false);
+      setProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit}>
       <PaymentElement />
-      
       {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-3">
+        <div className="mt-4 text-red-500 text-sm">
           {error}
         </div>
       )}
-
       <button
         type="submit"
-        disabled={!stripe || loading}
-        className={`w-full py-2 px-4 rounded-lg ${
-          loading ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'
-        } text-white transition-colors`}
+        disabled={!stripe || processing}
+        className={`
+          mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg
+          hover:bg-blue-700 transition-colors
+          ${(!stripe || processing) ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
       >
-        {loading ? 'Processing...' : `Pay ${amount} ${currency}`}
+        {processing ? 'Processing...' : 'Pay Now'}
       </button>
     </form>
   );
