@@ -6,28 +6,60 @@ const pool = require('../config/database');
 // Signup endpoint
 router.post('/signup', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { 
+            firstName,
+            lastName,
+            email, 
+            password 
+        } = req.body;
         
+        // Validate required fields
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({
+                message: 'Required fields missing'
+            });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        // Insert user into database
-        const [result] = await pool.execute(
-            'INSERT INTO users (email, password) VALUES (?, ?)',
-            [email, hashedPassword]
-        );
+        // Insert user
+        const query = `
+            INSERT INTO users (
+                first_name, 
+                last_name, 
+                email, 
+                password_hash,
+                status,
+                created_at
+            ) VALUES (?, ?, ?, ?, 'pending', NOW())
+        `;
+
+        const values = [
+            firstName,
+            lastName,
+            email,
+            hashedPassword
+        ];
+        
+        const [result] = await pool.execute(query, values);
         
         res.status(201).json({
             userId: result.insertId,
-            token: 'dummy-token', // Implement proper JWT token generation
             message: 'User created successfully'
         });
+
     } catch (error) {
         console.error('Signup error:', error);
         if (error.code === 'ER_DUP_ENTRY') {
-            res.status(409).json({ message: 'Email already exists' });
-        } else {
-            res.status(500).json({ message: 'Failed to create account' });
+            return res.status(409).json({
+                message: 'Email already exists'
+            });
         }
+        res.status(500).json({
+            message: 'Failed to create account'
+        });
     }
-}); 
+});
+
+module.exports = router; 

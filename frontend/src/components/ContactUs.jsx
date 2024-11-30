@@ -83,7 +83,7 @@ export function ContactUs() {
                 </div>
                 <div>
                   <h3 className="text-white font-medium">Email</h3>
-                  <p className="text-gray-400 mt-1">support@pexioace.com</p>
+                  <p className="text-gray-400 mt-1">support@gopexi.com</p>
                 </div>
               </div>
 

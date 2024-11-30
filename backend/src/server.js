@@ -3,6 +3,7 @@ import cors from 'cors';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import pool from '../config/database.js';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
@@ -11,6 +12,98 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(cors());
 app.use(express.json());
+
+// Add this before your routes
+app.use((err, req, res, next) => {
+    console.error('Global error handler:', err);
+    res.status(500).json({
+        message: 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+});
+
+// Add signup endpoint with better error logging
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        console.log('Received signup request:', {
+            ...req.body,
+            password: '[REDACTED]'
+        });
+
+        const { 
+            firstName,
+            lastName,
+            email, 
+            password 
+        } = req.body;
+        
+        // Validate required fields
+        if (!firstName || !lastName || !email || !password) {
+            console.log('Missing required fields');
+            return res.status(400).json({
+                message: 'Required fields missing'
+            });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Insert user with the correct field names and table structure
+        const query = `
+            INSERT INTO users (
+                first_name, 
+                last_name, 
+                email, 
+                password_hash,
+                status,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `;
+
+        const values = [
+            firstName,
+            lastName,
+            email,
+            hashedPassword
+        ];
+        
+        console.log('Executing query with values:', {
+            firstName,
+            lastName,
+            email,
+            hashedPassword: '[REDACTED]'
+        });
+        
+        const [result] = await pool.execute(query, values);
+        console.log('User inserted successfully:', result.insertId);
+        
+        res.status(201).json({
+            userId: result.insertId,
+            message: 'User created successfully'
+        });
+
+    } catch (error) {
+        console.error('Detailed signup error:', {
+            message: error.message,
+            code: error.code,
+            sqlMessage: error.sqlMessage,
+            sqlState: error.sqlState,
+            stack: error.stack
+        });
+
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({
+                message: 'Email already exists'
+            });
+        }
+
+        res.status(500).json({
+            message: 'Failed to create account',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
 
 // Existing Wallet funding endpoint
 app.post('/api/wallet/fund', async (req, res) => {
