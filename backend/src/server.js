@@ -48,40 +48,48 @@ app.post('/api/auth/signup', async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        // Insert user with the correct field names and table structure
-        const query = `
-            INSERT INTO users (
-                first_name, 
-                last_name, 
-                email, 
-                password_hash,
-                status,
-                created_at,
-                updated_at
-            ) VALUES (?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        `;
+        // Get connection from pool with timeout
+        const connection = await pool.getConnection();
+        
+        try {
+            // Begin transaction
+            await connection.beginTransaction();
 
-        const values = [
-            firstName,
-            lastName,
-            email,
-            hashedPassword
-        ];
-        
-        console.log('Executing query with values:', {
-            firstName,
-            lastName,
-            email,
-            hashedPassword: '[REDACTED]'
-        });
-        
-        const [result] = await pool.execute(query, values);
-        console.log('User inserted successfully:', result.insertId);
-        
-        res.status(201).json({
-            userId: result.insertId,
-            message: 'User created successfully'
-        });
+            const query = `
+                INSERT INTO users (
+                    first_name, 
+                    last_name, 
+                    email, 
+                    password_hash,
+                    status,
+                    created_at,
+                    updated_at
+                ) VALUES (?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            `;
+
+            const values = [
+                firstName,
+                lastName,
+                email,
+                hashedPassword
+            ];
+            
+            const [result] = await connection.execute(query, values);
+            await connection.commit();
+            
+            console.log('User inserted successfully:', result.insertId);
+            
+            res.status(201).json({
+                userId: result.insertId,
+                message: 'User created successfully'
+            });
+
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
 
     } catch (error) {
         console.error('Detailed signup error:', {

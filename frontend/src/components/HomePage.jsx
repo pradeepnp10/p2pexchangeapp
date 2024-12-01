@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navigation } from './Navigation';
 import { toast } from 'react-hot-toast';
+import { ChatBot } from './ChatBot';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -449,6 +450,9 @@ export function HomePage() {
 
       {/* How It Works */}
       {howItWorksSection}
+
+      {/* Add ChatBot at the end */}
+      <ChatBot />
     </div>
   );
 } 
