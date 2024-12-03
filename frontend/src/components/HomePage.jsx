@@ -69,17 +69,13 @@ export function HomePage() {
 
   // Add this section after the Hero Section and before Features Section
   const converterSection = (
-    <div className="py-20 relative">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-purple-900/20 backdrop-blur-3xl"></div>
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:40px_40px]"></div>
-      
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Glowing effects */}
-        <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div className="py-10 md:py-20 relative px-4">
+      <div className="max-w-4xl mx-auto relative">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-purple-900/20 backdrop-blur-3xl"></div>
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:40px_40px]"></div>
         
-        <div className="bg-gray-800/40 rounded-2xl p-8 backdrop-blur-lg border border-gray-700/50 shadow-2xl">
+        <div className="bg-gray-800/40 rounded-2xl p-4 md:p-8 backdrop-blur-lg border border-gray-700/50 shadow-2xl">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Currency Converter
@@ -87,9 +83,8 @@ export function HomePage() {
             <p className="text-gray-400">Get real-time exchange rates with competitive fees</p>
           </div>
           
-          <div className="space-y-8">
-            {/* Amount Input with Currency Selection */}
-            <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div className="space-y-2">
                 <label className="block text-gray-300 text-sm font-medium mb-2">You Send</label>
                 <div className="relative">
@@ -148,7 +143,7 @@ export function HomePage() {
 
             {/* Conversion Details */}
             {convertedAmount && (
-              <div className="bg-gray-700/30 rounded-xl p-4 space-y-3 border border-gray-700/50">
+              <div className="bg-gray-700/30 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 text-sm md:text-base">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Converted Amount</span>
                   <span className="text-white font-medium">
@@ -317,26 +312,20 @@ export function HomePage() {
 
   // Updated How It Works section
   const howItWorksSection = (
-    <div className="py-20 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-white text-center mb-16 
-          bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent
-          transform hover:scale-105 transition-transform duration-300">
+    <div className="py-10 md:py-20 relative overflow-hidden px-4">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-16">
           How It Works
         </h2>
 
-        <div className="grid md:grid-cols-4 gap-8 relative">
-          {/* Connecting Lines for Desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 relative">
+          {/* Remove connecting lines on mobile */}
           <div className="hidden md:block absolute top-6 left-[25%] right-[25%] h-0.5 bg-blue-600/30">
             <div className="connecting-line"></div>
           </div>
 
           {steps.map((step, index) => (
-            <div
-              key={index}
-              className="relative step-animation hover-scale p-6"
-              style={{ animationDelay: `${step.delay}ms` }}
-            >
+            <div key={index} className="relative step-animation hover-scale p-4 md:p-6">
               <div className="text-center relative z-10">
                 <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6
                   step-icon-pulse transform hover:rotate-12 transition-transform duration-300">

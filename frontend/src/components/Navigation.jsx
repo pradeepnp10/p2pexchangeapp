@@ -5,6 +5,7 @@ import pexioaceLogo from "../assets/go-pexi-logo-with-tagline.png";
 
 export function Navigation() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
 
@@ -193,18 +194,31 @@ export function Navigation() {
         <div className="max-w-7xl mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo Section */}
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-2">
-                <img 
-                  src={pexioaceLogo} 
-                  alt="Pexioace" 
-                  className="h-8 w-auto"
-                />
-              </Link>
+            <div className="flex flex-col items-center ml-4">
+              <img 
+                src={pexioaceLogo} 
+                alt="Pexioace" 
+                className="h-6 w-auto"
+              />
+              <span className="text-xs font-medium text-white mt-1">
+                Digital Pulse
+              </span>
             </div>
 
-            {/* Navigation Links - Updated for better contrast */}
-            <div className="flex items-center space-x-1">
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2 text-white"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                  d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} 
+                />
+              </svg>
+            </button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-1">
               <NavLink to="/" exact>
                 Home
               </NavLink>
@@ -239,6 +253,22 @@ export function Navigation() {
                 Contact
               </NavLink>
             </div>
+
+            {/* Mobile Navigation */}
+            {isMobileMenuOpen && (
+              <div className="absolute top-[60px] left-0 right-0 bg-blue-700 md:hidden">
+                <div className="px-4 py-2 space-y-2">
+                  {/* Mobile nav links */}
+                  <NavLink to="/" exact className="block py-2">Home</NavLink>
+                  <NavLink to="/about" className="block py-2">About</NavLink>
+                  <NavLink to="/contact" className="block py-2">Contact</NavLink>
+                  <div className="pt-2 border-t border-blue-600">
+                    <Link to="/login" className="block py-2">Login</Link>
+                    <Link to="/signup" className="block py-2">Sign Up</Link>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Auth Buttons - Updated for better contrast */}
             <div className="flex items-center space-x-4">

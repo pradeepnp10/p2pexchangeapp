@@ -227,3 +227,43 @@
 .gradient-text {
   @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
 }
+
+@layer utilities {
+  /* Add responsive container utility */
+  .container-responsive {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Add responsive text utilities */
+  .text-responsive {
+    @apply text-sm md:text-base lg:text-lg;
+  }
+  
+  /* Add responsive padding utilities */
+  .padding-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  /* Add touch-friendly button sizes for mobile */
+  .button-responsive {
+    @apply min-h-[44px] md:min-h-[36px] px-4 py-2 md:py-1.5;
+  }
+}
+
+/* Add better touch targets for mobile */
+@media (max-width: 768px) {
+  button, 
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}

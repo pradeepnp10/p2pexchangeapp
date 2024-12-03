@@ -74,8 +74,8 @@ export function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-gray-800 rounded-lg p-8">
-        <h2 className="text-2xl font-bold text-white mb-6">Create Account</h2>
+      <div className="w-full max-w-md bg-gray-800 rounded-lg p-4 md:p-8">
+        <h2 className="text-xl md:text-2xl font-bold text-white mb-6">Create Account</h2>
         
         {error && (
           <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-3 mb-4">
@@ -90,7 +90,7 @@ export function SignupPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 First Name
@@ -128,7 +128,7 @@ export function SignupPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
+              className="w-full px-4 py-3 md:py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
               required
             />
           </div>
