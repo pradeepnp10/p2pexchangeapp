@@ -125,6 +125,44 @@ const ExchangeRates = () => {
 };
 
 export const DashboardHome = () => {
+  const flagsBanner = (
+    <div className="py-4 bg-gray-800/30 overflow-hidden rounded-lg mb-6">
+      <div className="flex animate-scroll space-x-8">
+        {[...CURRENCIES_TO_TRACK, ...CURRENCIES_TO_TRACK].map((currency, index) => (
+          <div 
+            key={`${currency}-${index}`} 
+            className="flex items-center space-x-2 min-w-fit"
+          >
+            <img
+              src={`https://flagcdn.com/${currency.toLowerCase().slice(0, 2)}.svg`}
+              alt={`${currency} flag`}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+            <span className="text-gray-400">{currency}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Add these styles
+  const styleSheet = document.createElement("style");
+  styleSheet.innerText = `
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-scroll {
+      animation: scroll 30s linear infinite;
+    }
+  `;
+  document.head.appendChild(styleSheet);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
@@ -135,6 +173,7 @@ export const DashboardHome = () => {
           Base Currency: {BASE_CURRENCY}
         </span>
       </div>
+      {flagsBanner}
       <ExchangeRates />
       {/* ... rest of your dashboard content ... */}
     </div>

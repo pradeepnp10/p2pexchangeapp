@@ -70,7 +70,7 @@ export function HomePage() {
   // Add this section after the Hero Section and before Features Section
   const converterSection = (
     <div className="py-10 md:py-20 relative px-4">
-      <div className="max-w-4xl mx-auto relative">
+      <div className="max-w-4xl mx-auto relative converter-3d">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-purple-900/20 backdrop-blur-3xl"></div>
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:40px_40px]"></div>
@@ -272,6 +272,29 @@ export function HomePage() {
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-scroll {
+      animation: scroll 30s linear infinite;
+    }
   `;
 
   // Add this style tag to your document head or CSS file
@@ -348,6 +371,28 @@ export function HomePage() {
     </div>
   );
 
+  // Add this new component after the converterSection
+  const flagsBanner = (
+    <div className="py-8 bg-gray-800/30 overflow-hidden">
+      <div className="flex animate-scroll space-x-8">
+        {/* Double the currencies array to create seamless loop */}
+        {[...currencies, ...currencies].map((currency, index) => (
+          <div 
+            key={`${currency}-${index}`} 
+            className="flex items-center space-x-2 min-w-fit"
+          >
+            <img
+              src={`https://flagcdn.com/${currency.toLowerCase().slice(0, 2)}.svg`}
+              alt={`${currency} flag`}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+            <span className="text-gray-400">{currency}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <Navigation />
@@ -383,6 +428,7 @@ export function HomePage() {
 
       {/* Currency Converter Section */}
       {converterSection}
+      {flagsBanner}
 
       {/* Features Section */}
       <div className="py-20 bg-gray-800/50">

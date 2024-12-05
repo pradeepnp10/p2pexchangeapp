@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import pexioaceLogo from "../assets/go-pexi-logo-with-tagline.png";
+import pexioaceLogo from "../assets/go-pexi-logo-with-taglines.png";
 
 export function Navigation() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
@@ -198,9 +198,9 @@ export function Navigation() {
               <img 
                 src={pexioaceLogo} 
                 alt="Pexioace" 
-                className="h-6 w-auto"
+                className="h-8 w-auto"
               />
-              <span className="text-xs font-medium text-white mt-1">
+              <span className="text-[10px] font-medium text-white mt-1">
                 Digital Pulse
               </span>
             </div>
