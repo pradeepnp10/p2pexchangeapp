@@ -375,7 +375,6 @@ export function HomePage() {
   const flagsBanner = (
     <div className="py-8 bg-gray-800/30 overflow-hidden">
       <div className="flex animate-scroll space-x-8">
-        {/* Double the currencies array to create seamless loop */}
         {[...currencies, ...currencies].map((currency, index) => (
           <div 
             key={`${currency}-${index}`} 
