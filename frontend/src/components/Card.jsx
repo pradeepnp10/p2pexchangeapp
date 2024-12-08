@@ -25,7 +25,7 @@ export function Card() {
             <div className="relative h-full p-6 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-white text-sm">PexioAce</p>
+                  <p className="text-white text-sm">gopexi</p>
                   <div className="mt-1">
                     <Globe className="h-6 w-6 text-white" />
                   </div>

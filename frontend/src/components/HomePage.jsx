@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Navigation } from './Navigation';
 import { toast } from 'react-hot-toast';
 import { ChatBot } from './ChatBot';
+import { motion } from 'framer-motion';
+import globeAnimation from '../assets/Globe loop.mp4';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -67,15 +69,63 @@ export function HomePage() {
     calculateConversion();
   }, [amount, exchangeRate]);
 
-  // Add this section after the Hero Section and before Features Section
+  // Updated button styles and animations
+  const buttonVariants = {
+    hover: { 
+      scale: 1.05,
+      boxShadow: "0 10px 30px -10px rgba(59, 130, 246, 0.5)",
+    },
+    tap: { scale: 0.95 }
+  };
+
+  // Updated Hero Section with better text alignment
+  const heroSection = (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+      <div className="text-center">
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          <span className="typing-animation inline-block overflow-hidden whitespace-nowrap">
+            Connecting payments,
+          </span>
+          <br />
+          <span className="typing-animation inline-block overflow-hidden whitespace-nowrap">
+            Empowering exchange
+          </span>
+        </h1>
+        <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          Exchange currencies securely and instantly with our peer-to-peer platform.
+          Get the best rates and manage multiple currencies in one place.
+        </p>
+        <div className="flex justify-center">
+          <motion.button
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            onClick={() => navigate('/signup')}
+            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-12 py-4 rounded-xl text-lg font-medium 
+              backdrop-blur-lg shadow-[0_0_30px_rgba(59,130,246,0.3)] 
+              border border-blue-500/20 transition-all duration-300"
+          >
+            Get Started
+          </motion.button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Updated converter section with glass morphism
   const converterSection = (
-    <div className="py-10 md:py-20 relative px-4">
-      <div className="max-w-4xl mx-auto relative converter-3d">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-purple-900/20 backdrop-blur-3xl"></div>
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:40px_40px]"></div>
+    <div className="py-16 md:py-24 relative px-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto relative"
+      >
+        {/* Enhanced background effects */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/30 to-purple-900/30 backdrop-blur-xl rounded-2xl"></div>
+        <div className="absolute inset-0 bg-grid-white/[0.03] bg-[size:30px_30px] rounded-2xl"></div>
         
-        <div className="bg-gray-800/40 rounded-2xl p-4 md:p-8 backdrop-blur-lg border border-gray-700/50 shadow-2xl">
+        <div className="relative bg-white/5 rounded-2xl p-6 md:p-10 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(59,130,246,0.1)]">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Currency Converter
@@ -166,15 +216,18 @@ export function HomePage() {
               </div>
             )}
 
-            {/* CTA Button */}
-            <button
+            {/* Updated CTA Button */}
+            <motion.button
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
               onClick={() => navigate('/signup')}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-medium 
-                hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] 
-                focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-lg"
+                backdrop-blur-lg border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.3)]
+                transition-all duration-300"
             >
               Start Converting Now
-            </button>
+            </motion.button>
 
             {/* Additional Info */}
             <div className="text-center text-sm text-gray-400">
@@ -182,7 +235,7 @@ export function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 
@@ -295,6 +348,25 @@ export function HomePage() {
     .animate-scroll {
       animation: scroll 30s linear infinite;
     }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+    
+    .typing-animation {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      animation: 
+        typing 3.5s steps(40, end),
+        blink 1s step-end infinite;
+      margin: 0 auto;
+    }
   `;
 
   // Add this style tag to your document head or CSS file
@@ -392,95 +464,141 @@ export function HomePage() {
     </div>
   );
 
+  // Updated feature card styling
+  const FeatureCard = ({ icon, title, description }) => (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="bg-gray-50 p-8 rounded-xl border border-gray-200
+        hover:bg-gray-100 transition-all duration-300 shadow-lg"
+    >
+      <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl 
+        flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+        {icon}
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </motion.div>
+  );
+
+  // Add this to your existing styles
+  const additionalStyles = `
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .gradient-border {
+      position: relative;
+      background: linear-gradient(to right, #3B82F6, #8B5CF6);
+      padding: 1px;
+      border-radius: 1rem;
+    }
+
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      padding: 2px;
+      background: linear-gradient(to right, #3B82F6, #8B5CF6);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+  `;
+
+  // Updated globe section with CTA button
+  const globeSection = (
+    <div className="w-full relative">
+      {/* Video Background */}
+      <video 
+        autoPlay 
+        loop 
+        muted 
+        playsInline
+        className="w-full h-auto object-cover"
+      >
+        <source src={globeAnimation} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Overlay Text and CTA */}
+      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-wide">
+            Send Money Globally
+          </h2>
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto px-4 mb-8">
+            Fast, secure, and borderless transactions at your fingertips
+          </p>
+          <motion.button
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            onClick={() => navigate('/signup')}
+            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-12 py-4 rounded-xl text-lg font-medium 
+              backdrop-blur-lg shadow-[0_0_30px_rgba(59,130,246,0.3)] 
+              border border-blue-500/20 transition-all duration-300
+              hover:from-blue-500 hover:to-blue-400"
+          >
+            Start Sending Now
+          </motion.button>
+        </motion.div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <Navigation />
       
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-        <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Connecting payments, Empowering exchange
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Exchange currencies securely and instantly with our peer-to-peer platform.
-            Get the best rates and manage multiple currencies in one place.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => navigate('/signup')}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium 
-                hover:bg-blue-700 transition-colors"
-            >
-              Get Started
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-gray-700 text-white px-8 py-3 rounded-lg text-lg font-medium 
-                hover:bg-gray-600 transition-colors"
-            >
-              Login
-            </button>
-          </div>
-        </div>
-      </div>
+      {heroSection}
 
       {/* Currency Converter Section */}
       {converterSection}
       {flagsBanner}
 
       {/* Features Section */}
-      <div className="py-20 bg-gray-800/50">
+      <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
             Why Choose Our Platform?
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             {/* Multi-Currency Support */}
-            <div className="bg-gray-700/50 p-6 rounded-xl">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">💱</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Multi-Currency Support
-              </h3>
-              <p className="text-gray-300">
-                Exchange between multiple major currencies with competitive rates.
-                Support for USD, EUR, GBP, and more.
-              </p>
-            </div>
+            <FeatureCard
+              icon={<span className="text-white">💱</span>}
+              title="Multi-Currency Support"
+              description="Exchange between multiple major currencies with competitive rates. Support for USD, EUR, GBP, and more."
+            />
 
             {/* Secure Transactions */}
-            <div className="bg-gray-700/50 p-6 rounded-xl">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🔒</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Secure Transactions
-              </h3>
-              <p className="text-gray-300">
-                Bank-grade security with advanced encryption and secure payment processing.
-                Your funds are always safe.
-              </p>
-            </div>
+            <FeatureCard
+              icon={<span className="text-white">🔒</span>}
+              title="Secure Transactions"
+              description="Bank-grade security with advanced encryption and secure payment processing. Your funds are always safe."
+            />
 
             {/* Instant Processing */}
-            <div className="bg-gray-700/50 p-6 rounded-xl">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">⚡</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Instant Processing
-              </h3>
-              <p className="text-gray-300">
-                Quick and efficient currency exchange with real-time rates.
-                No waiting for days to complete transactions.
-              </p>
-            </div>
+            <FeatureCard
+              icon={<span className="text-white">⚡</span>}
+              title="Instant Processing"
+              description="Quick and efficient currency exchange with real-time rates. No waiting for days to complete transactions."
+            />
           </div>
         </div>
       </div>
+
+      {globeSection}
 
       {/* How It Works */}
       {howItWorksSection}
