@@ -3,6 +3,149 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import pexioaceLogo from "../assets/go-pexi-logo-with-taglines.png";
 
+// Mobile Navigation Menu Component
+const MobileMenu = ({ isOpen, services, onClose }) => {
+  const [activeSection, setActiveSection] = useState(null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="fixed inset-0 top-[60px] bg-gray-900/95 backdrop-blur-lg z-50 overflow-y-auto"
+    >
+      <div className="px-4 py-6 space-y-6">
+        {/* Main Navigation */}
+        <div className="space-y-4">
+          <Link 
+            to="/"
+            className="block px-4 py-3 text-white text-lg font-medium rounded-lg hover:bg-blue-600/20"
+            onClick={onClose}
+          >
+            Home
+          </Link>
+
+          {/* Services Accordion */}
+          <div className="rounded-lg overflow-hidden">
+            <button
+              onClick={() => setActiveSection(activeSection === 'services' ? null : 'services')}
+              className="w-full px-4 py-3 text-white text-lg font-medium flex items-center justify-between rounded-lg hover:bg-blue-600/20"
+            >
+              Services
+              <svg
+                className={`w-5 h-5 transition-transform duration-200 ${
+                  activeSection === 'services' ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {activeSection === 'services' && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                className="px-4 py-2 bg-blue-600/10"
+              >
+                <div className="space-y-4">
+                  {/* Exchange Services */}
+                  <div className="p-3 rounded-lg">
+                    <Link 
+                      to="/dashboard/exchange"
+                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-600/20"
+                      onClick={onClose}
+                    >
+                      <span className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        💱
+                      </span>
+                      <div>
+                        <p className="text-white font-medium">Currency Exchange</p>
+                        <p className="text-sm text-gray-300">Convert currencies instantly</p>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Digital Wallet */}
+                  <div className="p-3 rounded-lg">
+                    <Link 
+                      to="/wallet"
+                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-600/20"
+                      onClick={onClose}
+                    >
+                      <span className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        👝
+                      </span>
+                      <div>
+                        <p className="text-white font-medium">Digital Wallet</p>
+                        <p className="text-sm text-gray-300">Manage your funds</p>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Prepaid Cards */}
+                  <div className="p-3 rounded-lg">
+                    <Link 
+                      to="/card"
+                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-600/20"
+                      onClick={onClose}
+                    >
+                      <span className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        💳
+                      </span>
+                      <div>
+                        <p className="text-white font-medium">Prepaid Cards</p>
+                        <p className="text-sm text-gray-300">Virtual & physical cards</p>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          <Link 
+            to="/about"
+            className="block px-4 py-3 text-white text-lg font-medium rounded-lg hover:bg-blue-600/20"
+            onClick={onClose}
+          >
+            About
+          </Link>
+          
+          <Link 
+            to="/contact"
+            className="block px-4 py-3 text-white text-lg font-medium rounded-lg hover:bg-blue-600/20"
+            onClick={onClose}
+          >
+            Contact
+          </Link>
+        </div>
+
+        {/* Auth Buttons */}
+        <div className="pt-6 space-y-3">
+          <Link
+            to="/login"
+            className="block w-full px-4 py-3 text-center text-white bg-blue-600/20 rounded-lg font-medium"
+            onClick={onClose}
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className="block w-full px-4 py-3 text-center text-white bg-[#FF6B2B] rounded-lg font-medium"
+            onClick={onClose}
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 export function Navigation() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -255,20 +398,15 @@ export function Navigation() {
             </div>
 
             {/* Mobile Navigation */}
-            {isMobileMenuOpen && (
-              <div className="absolute top-[60px] left-0 right-0 bg-blue-700 md:hidden">
-                <div className="px-4 py-2 space-y-2">
-                  {/* Mobile nav links */}
-                  <NavLink to="/" exact className="block py-2">Home</NavLink>
-                  <NavLink to="/about" className="block py-2">About</NavLink>
-                  <NavLink to="/contact" className="block py-2">Contact</NavLink>
-                  <div className="pt-2 border-t border-blue-600">
-                    <Link to="/login" className="block py-2">Login</Link>
-                    <Link to="/signup" className="block py-2">Sign Up</Link>
-                  </div>
-                </div>
-              </div>
-            )}
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <MobileMenu 
+                  isOpen={isMobileMenuOpen}
+                  services={services}
+                  onClose={() => setIsMobileMenuOpen(false)}
+                />
+              )}
+            </AnimatePresence>
 
             {/* Auth Buttons - Updated for better contrast */}
             <div className="flex items-center space-x-4">

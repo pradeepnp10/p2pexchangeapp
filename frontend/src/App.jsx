@@ -16,6 +16,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ContactUs } from './components/ContactUs';
 import { TransactionProvider } from './contexts/TransactionContext';
 import { TransactionSuccess } from './components/Dashboard/TransactionSuccess';
+import { Footer } from './components/Footer';
+import { AboutUs } from './components/AboutUs';
+import './i18n';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 function App() {
   return (
@@ -46,8 +50,10 @@ function App() {
                 <Route path="/payments" element={<Payment />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/transaction-success" element={<TransactionSuccess />} />
+                <Route path="/about" element={<AboutUs />} />
               </Routes>
             </main>
+            <Footer />
           </div>
         </AuthProvider>
       </Router>

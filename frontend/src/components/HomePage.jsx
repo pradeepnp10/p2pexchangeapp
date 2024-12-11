@@ -5,8 +5,10 @@ import { toast } from 'react-hot-toast';
 import { ChatBot } from './ChatBot';
 import { motion } from 'framer-motion';
 import globeAnimation from '../assets/Globe loop.mp4';
+import { useTranslation } from 'react-i18next';
 
 export function HomePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('USD');
@@ -84,16 +86,15 @@ export function HomePage() {
       <div className="text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
           <span className="typing-animation inline-block overflow-hidden whitespace-nowrap">
-            Connecting payments,
+            {t('home.connectingPayments')}
           </span>
           <br />
           <span className="typing-animation inline-block overflow-hidden whitespace-nowrap">
-            Empowering exchange
+            {t('home.empoweringExchange')}
           </span>
         </h1>
         <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-          Exchange currencies securely and instantly with our peer-to-peer platform.
-          Get the best rates and manage multiple currencies in one place.
+          {t('home.exchangeDescription')}
         </p>
         <div className="flex justify-center">
           <motion.button
@@ -128,9 +129,9 @@ export function HomePage() {
         <div className="relative bg-white/5 rounded-2xl p-6 md:p-10 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(59,130,246,0.1)]">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Currency Converter
+              {t('home.currencyConverter')}
             </h2>
-            <p className="text-gray-400">Get real-time exchange rates with competitive fees</p>
+            <p className="text-gray-400">{t('home.realTimeRates')}</p>
           </div>
           
           <div className="space-y-6">

@@ -1,0 +1,13 @@
+{
+  "home": {
+    "connectingPayments": "Conectando pagos,",
+    "empoweringExchange": "Potenciando el intercambio",
+    "exchangeDescription": "Intercambia divisas de forma segura e instantánea con nuestra plataforma peer-to-peer. Obtén las mejores tarifas y gestiona múltiples divisas en un solo lugar.",
+    "currencyConverter": "Conversor de Moneda",
+    "realTimeRates": "Obtén tasas de cambio en tiempo real con tarifas competitivas",
+    "getStarted": "Comenzar",
+    "startSendingNow": "Empieza a Enviar Ahora",
+    "sendMoneyGlobally": "Envía Dinero Globalmente",
+    "fastSecure": "Transacciones rápidas, seguras y sin fronteras al alcance de tu mano"
+  }
+}
